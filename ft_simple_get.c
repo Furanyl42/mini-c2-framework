@@ -9,7 +9,7 @@ int ft_simple_get(const char *url)
 	if (!curl)
 	{
 		errprint("CURL", "Cant init");
-		return (-1);
+		return (1);
 	}
 
 	curl_easy_setopt(curl, CURLOPT_URL, url);
@@ -19,7 +19,7 @@ int ft_simple_get(const char *url)
 	{
 		errprint("CURL", curl_easy_strerror(res));
 		curl_easy_cleanup(curl);
-		return (-1);
+		return (1);
 	}
 	
 	curl_easy_cleanup(curl);

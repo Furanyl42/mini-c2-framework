@@ -23,6 +23,7 @@ char *ft_http_get_to_buffer(const char *url)
     if (res != CURLE_OK)
     {
         errprint("curl_easy_perform", curl_easy_strerror(res));
+        curl_easy_cleanup(curl_handle);
         return (NULL);
     }
 

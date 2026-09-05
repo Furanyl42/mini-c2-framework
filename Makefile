@@ -9,6 +9,7 @@ SRC         = ft_http_get_to_buffer.c \
               ft_simple_get.c \
               ft_util.c \
               ft_write_callback.c \
+			  ft_http_post.c \
               main.c
 
 OBJS        = $(SRC:%.c=$(OBJ_DIR)/%.o)

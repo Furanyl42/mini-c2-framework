@@ -4,16 +4,21 @@ int main(void)
 {
     CURLcode global_init_res;
     char *response;
+    const char *url;
+    const char *data;
+
+    url = "http://127.0.0.1:5000/api/beacon";
+    data = "{\"client_id\": \"test42\",\"status\": \"alive\"}";
 
     global_init_res = curl_global_init(CURL_GLOBAL_DEFAULT);
     if (global_init_res != CURLE_OK)
     {
-        errprint("curl_global_init", "failed");
+        errprint("curl_global_init", "failed init");
         return (1);
     }
     
-    printf("=== ft_http_get_to_buffer ===\n");
-    response = ft_http_get_to_buffer("http://127.0.0.1:5000/api/beacon");
+    printf("=== ft_http_post ===\n");
+    response = ft_http_post(url, data);
 
     if (response)
     {
@@ -22,7 +27,7 @@ int main(void)
     }
     else
     {
-        errprint("ft_http_get_to_buffer", "failed to get response");
+        errprint("ft_http_post", "failed to get response");
     }
 
     curl_global_cleanup();
