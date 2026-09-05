@@ -17,7 +17,6 @@ char *ft_http_post(const char *url, const char *data)
         errprint("curl_easy_init", "failed to initialize");
         return (NULL);
     }
-
 	headers = curl_slist_append(headers, "Content-Type: application/json");
 	if (!headers)
 	{
@@ -31,6 +30,7 @@ char *ft_http_post(const char *url, const char *data)
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, ft_write_callback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)(&chunk));
     
+	printf("DATA SENT: [%s]\n", data);
 	res = curl_easy_perform(curl_handle);
 
 	curl_slist_free_all(headers);
