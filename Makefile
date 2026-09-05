@@ -16,7 +16,7 @@ OBJS        = $(SRC:%.c=$(OBJ_DIR)/%.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -lcurl -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L. -lft -lcurl -o $(NAME)
 
 $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) $(CFLAGS) -I. -c $< -o $@
