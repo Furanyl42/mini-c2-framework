@@ -4,7 +4,7 @@
 # include <stdlib.h>
 # include <curl/curl.h>
 # include "libft.h"
-
+# include <sodium.h>
 
 typedef struct s_memory
 {
@@ -17,6 +17,7 @@ char    *ft_http_get_to_buffer(const char *url);
 int     ft_simple_get(const char *url);
 size_t  ft_write_callback(void *contents, size_t size, size_t nmemb, void *userp);
 char    *ft_http_post(const char *url, const char *post_data);
-char    *ft_fetch_command(const char *url, const char *client_id);
+char    *ft_fetch_command(const char *url, const char *client_id, const unsigned char *key);
 void	logme(int istittle, const char *message);
+char    *ft_encrypt_and_b64(const char *message, const unsigned char *key);
 #endif 

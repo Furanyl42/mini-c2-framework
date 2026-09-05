@@ -10,7 +10,11 @@ char *ft_http_post(const char *url, const char *data)
 	headers = NULL;
     chunk.memory = malloc(1);
     chunk.size = 0;
-
+	if (!chunk.memory)
+	{
+		errprint("malloc", "failed to allocate memory");
+		return (NULL);
+	}
     curl_handle = curl_easy_init();
     if (!curl_handle)
     {
@@ -30,7 +34,7 @@ char *ft_http_post(const char *url, const char *data)
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, ft_write_callback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)(&chunk));
     
-	printf("DATA SENT: [%s]\n", data);
+	printf("DATA SENT: %s\n", data);
 	res = curl_easy_perform(curl_handle);
 
 	curl_slist_free_all(headers);

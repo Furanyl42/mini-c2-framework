@@ -26,3 +26,6 @@ client
 # OS Specific
 .DS_Store
 Thumbs.db
+
+# context
+context

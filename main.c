@@ -1,12 +1,20 @@
 #include "ft_util.h"
 
+
 int main(void)
 {
     CURLcode global_init_res;
     char *response;
     const char *url;
     const char *data;
-
+    unsigned char key[crypto_secretbox_KEYBYTES];
+    const char *keystr = "0123456789abcdef0123456789abcdef";
+    ft_memcpy((void *)key, (const void *)keystr, crypto_secretbox_KEYBYTES);
+    if (sodium_init() < 0)
+    {
+        errprint("sodium_init", "failed to initialize libsodium");
+        return (1);
+    }
     url = "http://127.0.0.1:5000/api/beacon";
     data = "clientid-1234";
 
@@ -19,7 +27,7 @@ int main(void)
     }
     logme(1, "Sending beacon to server...");
     
-    response = ft_fetch_command(url, data);
+    response = ft_fetch_command(url, data, key);
 
 
     if (response)

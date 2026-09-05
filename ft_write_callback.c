@@ -12,7 +12,7 @@ size_t ft_write_callback(void *contents, size_t size, size_t nmemb, void *userp)
 	if (!ptr)
 	{
 		errprint("realloc", "not enougn memory");
-		return (-1);
+		return (1);
 	}
 	chunk->memory = ptr;
 	ft_memcpy(&(chunk->memory[chunk->size]), contents, realsize);
