@@ -19,14 +19,14 @@ char *ft_http_get_to_buffer(const char *url)
     curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, ft_write_callback);
     curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)(&chunk));
     res = curl_easy_perform(curl_handle);
-
+    curl_easy_cleanup(curl_handle);
+    
     if (res != CURLE_OK)
     {
         errprint("curl_easy_perform", curl_easy_strerror(res));
-        curl_easy_cleanup(curl_handle);
+        free(chunk.memory);
         return (NULL);
     }
-
-    curl_easy_cleanup(curl_handle);
+    free(chunk.memory);
     return (chunk.memory);
 }

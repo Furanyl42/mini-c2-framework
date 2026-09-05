@@ -28,16 +28,20 @@ char *ft_http_post(const char *url, const char *data)
 	curl_easy_setopt(curl_handle, CURLOPT_POST, 1L);
 	curl_easy_setopt(curl_handle, CURLOPT_POSTFIELDS, data);
 	curl_easy_setopt(curl_handle, CURLOPT_HTTPHEADER, headers);
-
+	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, ft_write_callback);
+    curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)(&chunk));
+    
 	res = curl_easy_perform(curl_handle);
-	if (res != CURLE_OK)
-	{
-		errprint("curl_easy_perform", curl_easy_strerror(res));
-		curl_slist_free_all(headers);
-		curl_easy_cleanup(curl_handle);
-		return (NULL);
-	}
+
 	curl_slist_free_all(headers);
 	curl_easy_cleanup(curl_handle);
+	
+	if (res != CURLE_OK)
+	{
+		errprint("curl_easy_perform", curl_easy_strerror(res));	
+		free(chunk.memory);
+		return (NULL);
+	}
+	
 	return (chunk.memory);
 }
