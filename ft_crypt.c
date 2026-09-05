@@ -40,7 +40,7 @@ char *ft_encrypt_and_b64(const char *message, const unsigned char *key)
 char *ft_decrypt_from_b64(const char *b64_payload, const unsigned char *key)
 {
     unsigned char *decoded;
-    unsigned long long decoded_len;
+    unsigned long decoded_len;
     unsigned long long ciphertext_len;
     char *plaintext;
     size_t bin_max_len;

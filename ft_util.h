@@ -20,4 +20,6 @@ char    *ft_http_post(const char *url, const char *post_data);
 char    *ft_fetch_command(const char *url, const char *client_id, const unsigned char *key);
 void	logme(int istittle, const char *message);
 char    *ft_encrypt_and_b64(const char *message, const unsigned char *key);
+char    *ft_decrypt_from_b64(const char *b64_payload, const unsigned char *key);
+char    *parse_response(const char *response, const unsigned char *key);
 #endif 

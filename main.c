@@ -5,6 +5,7 @@ int main(void)
 {
     CURLcode global_init_res;
     char *response;
+    char *parsed_response;
     const char *url;
     const char *data;
     unsigned char key[crypto_secretbox_KEYBYTES];
@@ -29,17 +30,27 @@ int main(void)
     
     response = ft_fetch_command(url, data, key);
 
-
-    if (response)
+    if (!response)
     {
-        logme(1, "Received response:");
-        logme(0, response);
+        errprint("ft_fetch_command", "failed to fetch command");
+        curl_global_cleanup();
+        return (1);
+    }
+    
+    parsed_response = parse_response(response, key);
+    if (!parsed_response)
+    {
+        errprint("parse_response", "failed to parse response");
         free(response);
+        curl_global_cleanup();
+        return (1);
     }
-    else
-    {
-        errprint("ft_fetch_command", "failed to get response");
-    }
+    
+    logme(1, "Received response:");
+    logme(0, parsed_response);
+    free(response);
+    free(parsed_response);
+    
     logme(1, "Cleaning up...");
     curl_global_cleanup();
     logme(1, "Client finished.");
