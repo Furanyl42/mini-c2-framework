@@ -17,6 +17,6 @@ char    *ft_http_get_to_buffer(const char *url);
 int     ft_simple_get(const char *url);
 size_t  ft_write_callback(void *contents, size_t size, size_t nmemb, void *userp);
 char    *ft_http_post(const char *url, const char *post_data);
-
+char    *ft_fetch_command(const char *url, const char *client_id);
 
 #endif 

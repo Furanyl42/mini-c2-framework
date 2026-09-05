@@ -17,17 +17,16 @@ int main(void)
         return (1);
     }
     
-    printf("=== ft_http_post ===\n");
-    response = ft_http_post(url, data);
+    response = ft_fetch_command(url, data);
 
     if (response)
     {
-        printf("Response: %s\n", response);
+        printf("[MINI C2] Response:\n%s\n", response);
         free(response);
     }
     else
     {
-        errprint("ft_http_post", "failed to get response");
+        errprint("ft_fetch_command", "failed to get response");
     }
 
     curl_global_cleanup();
