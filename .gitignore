@@ -1,0 +1,28 @@
+# Python & Virtual Environments
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database (SQLite)
+*.db
+*.sqlite
+*.sqlite3
+
+# C Binaries & Object Files
+*.o
+*.out
+*.exe
+*.dSYM/
+client
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Specific
+.DS_Store
+Thumbs.db
